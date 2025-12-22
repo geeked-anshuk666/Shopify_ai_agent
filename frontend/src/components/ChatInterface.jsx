@@ -29,7 +29,8 @@ export default function ChatInterface() {
         setIsLoading(true);
 
         try {
-            const response = await fetch('http://localhost:8000/chat', {
+            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+            const response = await fetch(`${apiUrl}/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,10 +68,10 @@ export default function ChatInterface() {
                     >
                         <div
                             className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${message.role === 'user'
-                                    ? 'bg-indigo-600 text-white'
-                                    : message.isError
-                                        ? 'bg-red-100 text-red-600'
-                                        : 'bg-emerald-600 text-white'
+                                ? 'bg-indigo-600 text-white'
+                                : message.isError
+                                    ? 'bg-red-100 text-red-600'
+                                    : 'bg-emerald-600 text-white'
                                 }`}
                         >
                             {message.role === 'user' ? <User size={18} /> :
@@ -79,10 +80,10 @@ export default function ChatInterface() {
 
                         <div
                             className={`max-w-[80%] rounded-2xl px-4 py-3 shadow-sm ${message.role === 'user'
-                                    ? 'bg-indigo-600 text-white'
-                                    : message.isError
-                                        ? 'bg-red-50 text-red-800 border border-red-200'
-                                        : 'bg-white text-gray-800 border border-gray-100'
+                                ? 'bg-indigo-600 text-white'
+                                : message.isError
+                                    ? 'bg-red-50 text-red-800 border border-red-200'
+                                    : 'bg-white text-gray-800 border border-gray-100'
                                 }`}
                         >
                             {message.role === 'user' ? (

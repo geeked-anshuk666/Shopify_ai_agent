@@ -10,11 +10,10 @@ load_dotenv()
 app = FastAPI(title="Shopify AI Agent")
 
 # CORS
-origins = [
-    "http://localhost:5173",  # Vite default
-    "http://localhost:3000",
-    "*"
-]
+# CORS
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173")
+origins = [origin.strip() for origin in allowed_origins_env.split(",")]
+
 
 app.add_middleware(
     CORSMiddleware,

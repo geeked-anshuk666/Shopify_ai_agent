@@ -101,6 +101,11 @@ def get_shopify_data(resource: str, query_params: str = "{}") -> str:
     except json.JSONDecodeError:
         return "Error: query_params must be a valid JSON string."
 
+    # Input Sanitization
+    if ".." in resource or resource.startswith("/") or resource.startswith("\\"):
+         return "Error: Invalid resource path. Traversal characters not allowed."
+
+    # Robustness: Force limit if not present
     if "limit" not in params:
         params["limit"] = 50
         

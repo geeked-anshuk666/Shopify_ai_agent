@@ -2,11 +2,11 @@ fastapi
 uvicorn
 python-dotenv
 requests
-langchain
-langchain-community
+langchain==0.1.20
+langchain-community==0.0.38
 langchain-google-genai
-langchain-experimental
-tenacity
+langchain-experimental==0.0.58
 httpx
 pydantic
 tabulate
+pandas
