@@ -93,16 +93,17 @@ export default function ChatInterface() {
                                     <ReactMarkdown
                                         remarkPlugins={[remarkGfm]}
                                         components={{
-                                            table: ({ node, ...props }) => (
+                                            // Removed { node } from props to fix linting errors
+                                            table: ({ ...props }) => (
                                                 <div className="overflow-x-auto my-4 border rounded-lg">
                                                     <table className="min-w-full divide-y divide-gray-200" {...props} />
                                                 </div>
                                             ),
-                                            thead: ({ node, ...props }) => <thead className="bg-gray-50" {...props} />,
-                                            th: ({ node, ...props }) => (
+                                            thead: ({ ...props }) => <thead className="bg-gray-50" {...props} />,
+                                            th: ({ ...props }) => (
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" {...props} />
                                             ),
-                                            td: ({ node, ...props }) => (
+                                            td: ({ ...props }) => (
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border-t border-gray-100" {...props} />
                                             ),
                                         }}
