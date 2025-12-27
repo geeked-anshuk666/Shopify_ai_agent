@@ -11,7 +11,8 @@ def run_agent(query: str):
         import pandas as pd
         import datetime
         import math
-        from langchain.agents import AgentType, initialize_agent
+        from langchain.agents import AgentExecutor, create_react_agent
+        from langchain_core.prompts import PromptTemplate
         from langchain_google_genai import ChatGoogleGenerativeAI
         from langchain_experimental.tools.python.tool import PythonAstREPLTool
         from tools import get_shopify_data
@@ -33,17 +34,41 @@ def run_agent(query: str):
         
         tools = [get_shopify_data, python_repl]
         
-        agent = initialize_agent(
-            tools,
-            llm,
-            agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
+        # Define the ReAct prompt manually to avoid pulling from hub
+        template = '''Answer the following questions as best you can. You have access to the following tools:
+
+{tools}
+
+Use the following format:
+
+Question: the input question you must answer
+Thought: you should always think about what to do
+Action: the action to take, should be one of [{tool_names}]
+Action Input: the input to the action
+Observation: the result of the action
+... (this Thought/Action/Action Input/Observation can repeat N times)
+Thought: I now know the final answer
+Final Answer: the final answer to the original input question
+
+Begin!
+
+Question: {input}
+Thought:{agent_scratchpad}'''
+
+        prompt = PromptTemplate.from_template(template)
+        
+        agent = create_react_agent(llm, tools, prompt)
+        
+        agent_executor = AgentExecutor(
+            agent=agent,
+            tools=tools,
             verbose=True,
             handle_parsing_errors=True,
             max_iterations=10
         )
         
-        result = agent.run(query)
-        return result
+        result = agent_executor.invoke({"input": query})
+        return result["output"]
     except Exception as e:
         return f"Error running agent: {str(e)}"
 
